@@ -60,7 +60,7 @@ export function PersonSelect({
 
   return (
     <Select
-      value={value || undefined}
+      value={value}
       disabled={disabled ?? false}
       onValueChange={(v) => (v === ADD ? setAdding(true) : onChange(v))}
     >
