@@ -46,9 +46,12 @@ export async function analyzeSheet(file: File): Promise<SheetAnalysis> {
   const XLSX = await import("xlsx");
   const buffer = await file.arrayBuffer();
   const wb = XLSX.read(buffer, { type: "array" });
-  const sheet = wb.Sheets[wb.SheetNames[0]];
-  const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, { defval: null });
-  const headers = rows.length ? Object.keys(rows[0]) : [];
+  const sheetName = wb.SheetNames[0];
+  const sheet = sheetName ? wb.Sheets[sheetName] : undefined;
+  const rows = sheet
+    ? XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, { defval: null })
+    : [];
+  const headers = rows[0] ? Object.keys(rows[0]) : [];
 
   const mapping: Partial<Record<FieldKey, string>> = {};
   const used = new Set<string>();
