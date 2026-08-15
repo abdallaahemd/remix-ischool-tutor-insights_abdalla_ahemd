@@ -16,12 +16,14 @@ import { tutors, type Tutor } from "@/lib/kpi";
 export function TutorSearch({
   value,
   onSelect,
+  tutors: source,
 }: {
   value: Tutor | null;
   onSelect: (tutor: Tutor) => void;
+  tutors?: Tutor[];
 }) {
   const [open, setOpen] = useState(false);
-  const list = useMemo(() => tutors, []);
+  const list = useMemo(() => source ?? tutors, [source]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
