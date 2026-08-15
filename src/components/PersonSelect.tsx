@@ -61,7 +61,7 @@ export function PersonSelect({
   return (
     <Select
       value={value || undefined}
-      disabled={disabled}
+      disabled={disabled ?? false}
       onValueChange={(v) => (v === ADD ? setAdding(true) : onChange(v))}
     >
       <SelectTrigger className="mt-1.5 w-full">
