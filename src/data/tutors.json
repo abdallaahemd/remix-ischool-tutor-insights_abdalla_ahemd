@@ -1,0 +1,732 @@
+[
+{
+"id": "T-1540",
+"name": "Eman Mohamed Abd El Fatah Morsi",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 98.28
+},
+{
+"id": "T-7070",
+"name": "Engy Mohamed Mohamed Salem",
+"innovation": 8.0,
+"adaptability": 4.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 91.0
+},
+{
+"id": "T-7048",
+"name": "Alaa Saber Abdelhakeem Elsayed",
+"innovation": 9.0,
+"adaptability": 4.0,
+"growth": 9.0,
+"professionalism": 5.0,
+"attendance": 8.0,
+"recordedTotal": 94.5
+},
+{
+"id": "T-7047",
+"name": "Ahmed Gamal Eldesawy Ahmed Elabd",
+"innovation": 9.0,
+"adaptability": 4.0,
+"growth": 9.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 97.4
+},
+{
+"id": "T-7275",
+"name": "Abdallah Abdallah",
+"innovation": 8.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 98.1
+},
+{
+"id": "T-11460",
+"name": "Mostafa Elsayed Mohamed Elsayed",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 99.6
+},
+{
+"id": "T-12107",
+"name": "Sara Yasser Mahfouz Elghazaly",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 9.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 95.4
+},
+{
+"id": "T-7309",
+"name": "Menna Tarek",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 97.3
+},
+{
+"id": "T-11432",
+"name": "Alaa Nabil Saad Mahmoud",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 99.5
+},
+{
+"id": "T-12055",
+"name": "Youssef Ehab Ahmed Elalfy",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 97.5
+},
+{
+"id": "T-12103",
+"name": "Omar Khalid Mohamed Khalafallah",
+"innovation": 8.0,
+"adaptability": 4.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 97.9
+},
+{
+"id": "T-12100",
+"name": "Lugyn Mahmoud Mohamed Nemr",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 9.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 96.5
+},
+{
+"id": "T-12110",
+"name": "Mosap Mostafa Omar Abdelmotaleb",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 9.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 98.3
+},
+{
+"id": "T-12059",
+"name": "Lobna Salah Gamal Ahmed",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 8.0,
+"recordedTotal": 95.2
+},
+{
+"id": "T-4160",
+"name": "Fatma Mohamed Elsayed Abdel-maboud",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 98.3
+},
+{
+"id": "T-1237",
+"name": "Dalia Eid Ali Mohamed",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 97.4
+},
+{
+"id": "T-1088",
+"name": "Wessam Algalil",
+"innovation": 8.0,
+"adaptability": 5.0,
+"growth": 9.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 93.2
+},
+{
+"id": "T-3906",
+"name": "Areege Samir",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 98.2
+},
+{
+"id": "T-11380",
+"name": "Somaya Saeed Abdullah Abdelrahman",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 8.0,
+"recordedTotal": 97.8
+},
+{
+"id": "T-3910",
+"name": "Abdelrahman Mahmoud Abdelrahman Mahmoud",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 97.4
+},
+{
+"id": "T-4101",
+"name": "Abdelrahman Gamal Sobhi Ibrahim",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 97.8
+},
+{
+"id": "T-4102",
+"name": "Rawan Hussein Elshahat Amin",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 8.0,
+"recordedTotal": 96.0
+},
+{
+"id": "T-4097",
+"name": "Mona Yasser Zaki Mahmoud",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 97.0
+},
+{
+"id": "T-4140",
+"name": "Ahmed Shams Ahmed Omran",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 8.0,
+"recordedTotal": 98.7
+},
+{
+"id": "T-4169",
+"name": "Reem Atef Abd El-Twab",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 8.0,
+"recordedTotal": 96.8
+},
+{
+"id": "T-4156",
+"name": "Kareem Saber Abdelmeniem Abdelwahab",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 8.0,
+"recordedTotal": 95.1
+},
+{
+"id": "T-4045",
+"name": "Hagr Seif El-Den Mohamed Adb El-Rahman",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 99.8
+},
+{
+"id": "T-4128",
+"name": "Yassa Kamille Abdullatif Fetian",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 98.2
+},
+{
+"id": "T-4171",
+"name": "Mahmoud Mohammed Abd El Salam",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 94.4
+},
+{
+"id": "T-4203",
+"name": "Fatma Fathy Mohamed Mokhtar",
+"innovation": 8.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 99.2
+},
+{
+"id": "T-3975",
+"name": "Nada Ibrahim Al-Sayed Ibrahim",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 9.0,
+"professionalism": 4.0,
+"attendance": 9.0,
+"recordedTotal": 98.8
+},
+{
+"id": "T-4145",
+"name": "Alaa Mohamed Hammad",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 98.0
+},
+{
+"id": "T-4571",
+"name": "Nada Abdulraheem Abdulraheem Nour",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 96.3
+},
+{
+"id": "T-7078",
+"name": "Mahmoud Soliman Ibrahim Mesalem",
+"innovation": 8.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 8.0,
+"recordedTotal": 95.7
+},
+{
+"id": "T-7037",
+"name": "Kawkab Gamal Ebrahim Ebrahim",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 4.0,
+"attendance": 9.0,
+"recordedTotal": 96.4
+},
+{
+"id": "T-7255",
+"name": "Aia Almahrok",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 99.2
+},
+{
+"id": "T-7230",
+"name": "Ahmed Abdelqawi",
+"innovation": 8.0,
+"adaptability": 3.0,
+"growth": 8.0,
+"professionalism": 4.0,
+"attendance": 10.0,
+"recordedTotal": 93.7
+},
+{
+"id": "T-7256",
+"name": "Mariam Mohamed",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 99.8
+},
+{
+"id": "T-7276",
+"name": "Viola Amin Shawkey Gerges",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 98.4
+},
+{
+"id": "T-7246",
+"name": "Naseem Masoud",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 7.0,
+"recordedTotal": 96.1
+},
+{
+"id": "T-1013]",
+"name": "Rahma Hassan Eladl",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 4.0,
+"attendance": 10.0,
+"recordedTotal": 97.8
+},
+{
+"id": "T-3915",
+"name": "Alaa Taha Ahmed Taha",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 97.5
+},
+{
+"id": "T-4007",
+"name": "Renad Ibrahim Zain Al-abdeen Mohamed",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 99.1
+},
+{
+"id": "T-4151",
+"name": "Youssef Samy Mohamed Aly",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 99.4
+},
+{
+"id": "T-4106",
+"name": "Tasneem Hatem wafeek Elazaby",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 96.2
+},
+{
+"id": "T-4153",
+"name": "Huda Hamed Mostafa Hamed",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 8.0,
+"recordedTotal": 97.2
+},
+{
+"id": "T-4048",
+"name": "Enas Ibrahim Mohamed",
+"innovation": 8.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 8.0,
+"recordedTotal": 96.0
+},
+{
+"id": "T-4191",
+"name": "Yasmine Hosny Hassan Mahmoud",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 99.3
+},
+{
+"id": "T-4223",
+"name": "Reem Sayed Ahmed Mahmoud",
+"innovation": 8.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 99.2
+},
+{
+"id": "T-7220",
+"name": "Asmaa Elmandouh",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 99.9
+},
+{
+"id": "T-7034",
+"name": "Aya Ahmed Ghobashy",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 97.1
+},
+{
+"id": "T-7216",
+"name": "Sondos Mohamed",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 4.0,
+"attendance": 10.0,
+"recordedTotal": 99.4
+},
+{
+"id": "T-7233",
+"name": "Sara Abozeed",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 98.5
+},
+{
+"id": "T-7219",
+"name": "Fadwa Radwan",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 99.4
+},
+{
+"id": "T-7076",
+"name": "Hadeer Maher Ahmed Awad",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 96.6
+},
+{
+"id": "T-7229",
+"name": "Steven Hany",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 99.3
+},
+{
+"id": "T-7308",
+"name": "Noha El-Menshawy",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 8.0,
+"recordedTotal": 96.0
+},
+{
+"id": "T-7221",
+"name": "Ahmed Magdy Shawky Abdelfattah",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 95.2
+},
+{
+"id": "T-7040",
+"name": "Mona Ahmed Abd El Azim Hassan",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 4.0,
+"attendance": 9.0,
+"recordedTotal": 98.4
+},
+{
+"id": "T-11392",
+"name": "Abdelrahman Hussein Mahmoud Abdelhamid",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 98.4
+},
+{
+"id": "T-12149",
+"name": "Fatma Yosry Mohamed Ahmed",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 97.7
+},
+{
+"id": "T-11388",
+"name": "Israa Mohamed Mahmoud Mohamed",
+"innovation": 7.0,
+"adaptability": 4.0,
+"growth": 9.0,
+"professionalism": 5.0,
+"attendance": 8.0,
+"recordedTotal": 94.6
+},
+{
+"id": "T-7041",
+"name": "Zaynab Salah Mohamed Elsayed",
+"innovation": 9.0,
+"adaptability": 4.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 6.0,
+"recordedTotal": 91.4
+},
+{
+"id": "T-11403",
+"name": "Saif Eldeen Nasser Kamal",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 96.2
+},
+{
+"id": "T-11413",
+"name": "Yara Mostafa Mohamed Soliman Elmeligy",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 98.6
+},
+{
+"id": "T-11430",
+"name": "Shereen Tarek Galal Eldin AbdelElfattah",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 8.0,
+"recordedTotal": 95.5
+},
+{
+"id": "T-11419",
+"name": "Nayera Nagy Mohammed Hussien",
+"innovation": 9.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 99.0
+},
+{
+"id": "T-11418",
+"name": "Basmala Osama Kamal Eldin",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 99.7
+},
+{
+"id": "T-11478",
+"name": "Basma Mahmoud Saad Badr",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 99.7
+},
+{
+"id": "T-12119",
+"name": "Ghada Ahmed Elsayed",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 98.2
+},
+{
+"id": "T-12095",
+"name": "Yara Yasser Mohammed Abdelslam",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 99.2
+},
+{
+"id": "T-12124",
+"name": "Aya Mohammed Helmy Mahmoud",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 10.0,
+"recordedTotal": 99.4
+},
+{
+"id": "T-12150",
+"name": "Lama Wahideldeen Abdelsattar Hegazy",
+"innovation": 10.0,
+"adaptability": 5.0,
+"growth": 10.0,
+"professionalism": 5.0,
+"attendance": 9.0,
+"recordedTotal": 98.5
+}
+]
