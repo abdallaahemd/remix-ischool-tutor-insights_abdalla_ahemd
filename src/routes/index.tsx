@@ -9,6 +9,7 @@ import {
   RefreshCw,
   Search,
   Sliders,
+  Sparkles,
   Upload,
   X,
 } from "lucide-react";
