@@ -33,6 +33,7 @@ import { KPI_DEFINITIONS, MAX_TOTAL, type KpiKey, type Tutor } from "@/lib/kpi";
 import type { SyncSummary } from "@/lib/sheet-import";
 import { formatSyncTime, useTutorStore } from "@/lib/tutor-store";
 import { MENTORS, TEAM_LEADERS, normalizeNames } from "@/lib/people";
+import { generateFeedback as generateFeedbackFn } from "@/lib/feedback.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -69,6 +70,17 @@ const MONTHS = [
   "December",
 ];
 
+const FEEDBACK_TYPES = [
+  "Outstanding Ideas",
+  "Collaboration",
+  "Attendance/Meetings",
+  "Working Hours",
+  "Innovation",
+  "Performance Improvement",
+  "Needs Improvement",
+  "General",
+];
+
 const NAV = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
   { id: "search", label: "Tutor Search", icon: Search },
@@ -89,6 +101,10 @@ function Index() {
   const [exporting, setExporting] = useState(false);
   const [mentors, setMentors] = useState<string[]>(MENTORS);
   const [leaders, setLeaders] = useState<string[]>(TEAM_LEADERS);
+  const [feedbackType, setFeedbackType] = useState<string>("General");
+  const [rawFeedback, setRawFeedback] = useState("");
+  const [generating, setGenerating] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
   const [meta, setMeta] = useState<ReportMeta>({
     mentor: "",
     teamLeader: "",
@@ -107,6 +123,27 @@ function Index() {
   );
 
   const update = (patch: Partial<ReportMeta>) => setMeta((m) => ({ ...m, ...patch }));
+
+  const handleGenerateFeedback = async () => {
+    if (!rawFeedback.trim()) return;
+    setGenerating(true);
+    setAiError(null);
+    try {
+      const res = await generateFeedbackFn({
+        data: {
+          feedbackType,
+          rawFeedback: rawFeedback.trim(),
+          tutorName: tutor?.name,
+          month: meta.month,
+        },
+      });
+      update({ feedback: res.text });
+    } catch {
+      setAiError("Could not generate feedback. Please try again.");
+    } finally {
+      setGenerating(false);
+    }
+  };
 
   const handleExport = async () => {
     if (!tutor) return;
