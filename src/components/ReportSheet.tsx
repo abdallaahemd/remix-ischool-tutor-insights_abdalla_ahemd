@@ -122,7 +122,7 @@ export function ReportSheet({ tutor, meta }: { tutor: Tutor; meta: ReportMeta })
         </div>
 
         <div className="mt-7">
-          <h3 className="text-base font-bold text-primary">Mentor Feedback</h3>
+          <h3 className="text-base font-bold text-primary">Evaluation Feedback</h3>
           <div className="mt-3 min-h-28 whitespace-pre-wrap rounded-xl border border-border bg-background px-5 py-4 text-sm leading-relaxed text-foreground">
             {meta.feedback?.trim() || "No feedback provided for this evaluation period."}
           </div>

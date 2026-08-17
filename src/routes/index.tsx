@@ -9,6 +9,7 @@ import {
   RefreshCw,
   Search,
   Sliders,
+  Sparkles,
   Upload,
   X,
 } from "lucide-react";
@@ -32,6 +33,7 @@ import { KPI_DEFINITIONS, MAX_TOTAL, type KpiKey, type Tutor } from "@/lib/kpi";
 import type { SyncSummary } from "@/lib/sheet-import";
 import { formatSyncTime, useTutorStore } from "@/lib/tutor-store";
 import { MENTORS, TEAM_LEADERS, normalizeNames } from "@/lib/people";
+import { generateFeedback as generateFeedbackFn } from "@/lib/feedback.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -68,6 +70,17 @@ const MONTHS = [
   "December",
 ];
 
+const FEEDBACK_TYPES = [
+  "Outstanding Ideas",
+  "Collaboration",
+  "Attendance/Meetings",
+  "Working Hours",
+  "Innovation",
+  "Performance Improvement",
+  "Needs Improvement",
+  "General",
+];
+
 const NAV = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
   { id: "search", label: "Tutor Search", icon: Search },
@@ -88,6 +101,10 @@ function Index() {
   const [exporting, setExporting] = useState(false);
   const [mentors, setMentors] = useState<string[]>(MENTORS);
   const [leaders, setLeaders] = useState<string[]>(TEAM_LEADERS);
+  const [feedbackType, setFeedbackType] = useState<string>("General");
+  const [rawFeedback, setRawFeedback] = useState("");
+  const [generating, setGenerating] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
   const [meta, setMeta] = useState<ReportMeta>({
     mentor: "",
     teamLeader: "",
@@ -106,6 +123,27 @@ function Index() {
   );
 
   const update = (patch: Partial<ReportMeta>) => setMeta((m) => ({ ...m, ...patch }));
+
+  const handleGenerateFeedback = async () => {
+    if (!rawFeedback.trim()) return;
+    setGenerating(true);
+    setAiError(null);
+    try {
+      const res = await generateFeedbackFn({
+        data: {
+          feedbackType,
+          rawFeedback: rawFeedback.trim(),
+          tutorName: tutor?.name,
+          month: meta.month,
+        },
+      });
+      update({ feedback: res.text });
+    } catch {
+      setAiError("Could not generate feedback. Please try again.");
+    } finally {
+      setGenerating(false);
+    }
+  };
 
   const handleExport = async () => {
     if (!tutor) return;
@@ -248,16 +286,22 @@ function Index() {
           <section id="search" className="rounded-2xl bg-card p-6 shadow-card">
             <Label className="text-sm font-semibold text-primary">Select tutor</Label>
             <div className="mt-3">
-              <TutorSearch
-                tutors={tutors}
-                value={baseTutor}
-                onSelect={(t) => {
-                  setTutorId(t.id);
-                  setOverrides({});
-                  setEditing(true);
-                  setGenerated(false);
-                }}
-              />
+              {tutors.length ? (
+                <TutorSearch
+                  tutors={tutors}
+                  value={baseTutor}
+                  onSelect={(t) => {
+                    setTutorId(t.id);
+                    setOverrides({});
+                    setEditing(true);
+                    setGenerated(false);
+                  }}
+                />
+              ) : (
+                <div className="rounded-xl border border-dashed border-accent bg-secondary/40 px-4 py-6 text-center text-sm text-muted-foreground">
+                  No tutors yet — upload a KPI sheet above to load tutor IDs and names.
+                </div>
+              )}
             </div>
           </section>
 
@@ -347,16 +391,67 @@ function Index() {
                 </div>
               </div>
 
-              <div className="mt-6">
-                <Label htmlFor="feedback">Mentor Feedback</Label>
-                <Textarea
-                  id="feedback"
-                  className="mt-1.5 min-h-28"
-                  value={meta.feedback}
-                  disabled={!editing}
-                  onChange={(e) => update({ feedback: e.target.value })}
-                  placeholder="Write the mentor's feedback for this evaluation period…"
-                />
+              <div className="mt-6 grid gap-4 lg:grid-cols-2">
+                <div>
+                  <Label>Feedback Type</Label>
+                  <Select
+                    value={feedbackType}
+                    disabled={!editing}
+                    onValueChange={setFeedbackType}
+                  >
+                    <SelectTrigger className="mt-1.5 w-full">
+                      <SelectValue placeholder="Select feedback type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {FEEDBACK_TYPES.map((t) => (
+                        <SelectItem key={t} value={t}>
+                          {t}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <Label htmlFor="raw-feedback" className="mt-4 block">
+                    Your notes
+                  </Label>
+                  <Textarea
+                    id="raw-feedback"
+                    className="mt-1.5 min-h-28"
+                    value={rawFeedback}
+                    disabled={!editing}
+                    onChange={(e) => setRawFeedback(e.target.value)}
+                    placeholder="Write your raw notes — the AI will rewrite them professionally…"
+                  />
+                  <div className="mt-3 flex flex-wrap items-center gap-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={!editing || generating || !rawFeedback.trim()}
+                      onClick={handleGenerateFeedback}
+                    >
+                      <Sparkles />
+                      {generating ? "Generating…" : "Generate Feedback"}
+                    </Button>
+                    {aiError && (
+                      <span className="text-xs font-medium text-destructive">{aiError}</span>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="feedback">Evaluation Feedback</Label>
+                  <Textarea
+                    id="feedback"
+                    className="mt-1.5 min-h-[15.5rem]"
+                    value={meta.feedback}
+                    disabled={!editing}
+                    onChange={(e) => update({ feedback: e.target.value })}
+                    placeholder="The generated feedback appears here and stays fully editable…"
+                  />
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    This exact text appears in the report and the exported PDF.
+                  </p>
+                </div>
               </div>
 
               <div className="mt-5 flex flex-wrap gap-2">
