@@ -104,16 +104,50 @@ export function SheetUploadDialog({
           if (file) void handleFile(file);
         }}
       />
-      <Button onClick={pick} disabled={busy} className="w-full justify-start gap-2">
-        <Upload />
-        {busy ? "Reading sheet…" : "Upload / Update Sheet"}
-      </Button>
+
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={pick}
+        onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && pick()}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragging(true);
+        }}
+        onDragLeave={() => setDragging(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragging(false);
+          const file = e.dataTransfer.files?.[0];
+          if (file) void handleFile(file);
+        }}
+        className={`upload-surface group flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-8 text-center transition-all outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+          dragging
+            ? "border-brand-sky shadow-card"
+            : "border-accent hover:border-primary hover:shadow-card"
+        }`}
+      >
+        <span className="flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+          {busy ? <FileSpreadsheet className="size-5" /> : <Upload className="size-5" />}
+        </span>
+        <p className="mt-3 text-sm font-bold text-primary">
+          {busy ? "Reading sheet…" : "Upload / Update Sheet"}
+        </p>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Drag &amp; drop your file here, or click to browse
+        </p>
+        <span className="mt-3 rounded-full bg-brand-lightblue/50 px-3 py-1 text-[11px] font-semibold text-primary">
+          .xlsx · .xls · .csv
+        </span>
+      </div>
+
       {error && (
         <p className="mt-2 flex items-start gap-2 text-xs font-medium text-destructive">
           <AlertTriangle className="mt-px size-3.5 shrink-0" />
           {error}
         </p>
       )}
+
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
