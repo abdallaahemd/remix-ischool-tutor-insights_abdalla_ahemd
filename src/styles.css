@@ -159,6 +159,38 @@
   background-image: var(--gradient-brand);
 }
 
+/* White-dominant corporate header: subtle iSchool blue gradient wash */
+@utility report-header {
+  background-color: oklch(1 0 0);
+  background-image:
+    linear-gradient(
+      110deg,
+      oklch(1 0 0) 0%,
+      oklch(1 0 0) 42%,
+      oklch(0.972 0.016 233) 62%,
+      oklch(0.712 0.166 241.3 / 0.18) 80%,
+      oklch(0.415 0.184 261.9 / 0.16) 100%
+    );
+}
+
+@utility header-rule {
+  background-image: linear-gradient(
+    90deg,
+    oklch(0.415 0.184 261.9) 0%,
+    oklch(0.415 0.184 261.9) 55%,
+    oklch(0.712 0.166 241.3) 82%,
+    oklch(0.833 0.167 81.2) 100%
+  );
+}
+
+@utility upload-surface {
+  background-image: linear-gradient(
+    150deg,
+    oklch(1 0 0) 0%,
+    oklch(0.972 0.016 233) 100%
+  );
+}
+
 @utility shadow-card {
   box-shadow: var(--shadow-card);
 }
@@ -166,6 +198,7 @@
 @utility shadow-report {
   box-shadow: var(--shadow-report);
 }
+
 
 @media print {
   body * {

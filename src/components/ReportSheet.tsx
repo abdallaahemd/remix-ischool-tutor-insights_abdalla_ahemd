@@ -24,21 +24,36 @@ export function ReportSheet({ tutor, meta }: { tutor: Tutor; meta: ReportMeta })
       id="report-sheet"
       className="mx-auto w-full max-w-[820px] overflow-hidden rounded-2xl bg-card shadow-report"
     >
-      <header className="brand-gradient px-8 py-7 sm:px-10">
-        <div className="flex flex-wrap items-center justify-between gap-5">
-          <div className="rounded-xl bg-card px-4 py-3">
-            <img src={logoAsset.url} alt="iSchool" className="h-10 w-auto" />
+      <header className="report-header px-8 py-8 sm:px-10">
+        <div className="flex flex-wrap items-center justify-between gap-6">
+          <div className="flex items-center gap-4">
+            <img src={logoAsset.url} alt="iSchool" className="h-11 w-auto" />
+            <span className="hidden h-10 w-px bg-accent sm:block" />
+            <div className="hidden sm:block">
+              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-sky">
+                iSchool
+              </p>
+              <p className="text-xs font-medium text-muted-foreground">
+                Official Evaluation Document
+              </p>
+            </div>
           </div>
-          <div className="text-right text-primary-foreground">
-            <p className="text-lg font-bold tracking-tight sm:text-xl">
+          <div className="text-right">
+            <p className="text-lg font-bold tracking-tight text-primary sm:text-xl">
               Monthly Tutor Evaluation Report
             </p>
-            <p className="text-sm opacity-85">KPI &amp; Culture Fit Assessment</p>
+            <p className="mt-0.5 text-sm font-medium text-muted-foreground">
+              KPI &amp; Culture Fit Assessment
+            </p>
+            <span className="mt-2 inline-block rounded-full border border-brand-yellow bg-brand-yellow/15 px-3 py-0.5 text-[11px] font-bold uppercase tracking-wide text-brand-orange">
+              {meta.month || "—"}
+            </span>
           </div>
         </div>
       </header>
 
-      <div className="h-1.5 w-full bg-brand-yellow" />
+      <div className="header-rule h-1.5 w-full" />
+
 
       <section className="grid grid-cols-2 gap-px bg-border sm:grid-cols-4">
         <Field label="Tutor Name" value={tutor.name} />
