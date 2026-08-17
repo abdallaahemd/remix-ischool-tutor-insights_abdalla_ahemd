@@ -286,16 +286,22 @@ function Index() {
           <section id="search" className="rounded-2xl bg-card p-6 shadow-card">
             <Label className="text-sm font-semibold text-primary">Select tutor</Label>
             <div className="mt-3">
-              <TutorSearch
-                tutors={tutors}
-                value={baseTutor}
-                onSelect={(t) => {
-                  setTutorId(t.id);
-                  setOverrides({});
-                  setEditing(true);
-                  setGenerated(false);
-                }}
-              />
+              {tutors.length ? (
+                <TutorSearch
+                  tutors={tutors}
+                  value={baseTutor}
+                  onSelect={(t) => {
+                    setTutorId(t.id);
+                    setOverrides({});
+                    setEditing(true);
+                    setGenerated(false);
+                  }}
+                />
+              ) : (
+                <div className="rounded-xl border border-dashed border-accent bg-secondary/40 px-4 py-6 text-center text-sm text-muted-foreground">
+                  No tutors yet — upload a KPI sheet above to load tutor IDs and names.
+                </div>
+              )}
             </div>
           </section>
 
