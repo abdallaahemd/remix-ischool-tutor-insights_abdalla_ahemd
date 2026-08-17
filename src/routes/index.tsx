@@ -347,16 +347,67 @@ function Index() {
                 </div>
               </div>
 
-              <div className="mt-6">
-                <Label htmlFor="feedback">Mentor Feedback</Label>
-                <Textarea
-                  id="feedback"
-                  className="mt-1.5 min-h-28"
-                  value={meta.feedback}
-                  disabled={!editing}
-                  onChange={(e) => update({ feedback: e.target.value })}
-                  placeholder="Write the mentor's feedback for this evaluation period…"
-                />
+              <div className="mt-6 grid gap-4 lg:grid-cols-2">
+                <div>
+                  <Label>Feedback Type</Label>
+                  <Select
+                    value={feedbackType}
+                    disabled={!editing}
+                    onValueChange={setFeedbackType}
+                  >
+                    <SelectTrigger className="mt-1.5 w-full">
+                      <SelectValue placeholder="Select feedback type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {FEEDBACK_TYPES.map((t) => (
+                        <SelectItem key={t} value={t}>
+                          {t}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <Label htmlFor="raw-feedback" className="mt-4 block">
+                    Your notes
+                  </Label>
+                  <Textarea
+                    id="raw-feedback"
+                    className="mt-1.5 min-h-28"
+                    value={rawFeedback}
+                    disabled={!editing}
+                    onChange={(e) => setRawFeedback(e.target.value)}
+                    placeholder="Write your raw notes — the AI will rewrite them professionally…"
+                  />
+                  <div className="mt-3 flex flex-wrap items-center gap-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={!editing || generating || !rawFeedback.trim()}
+                      onClick={handleGenerateFeedback}
+                    >
+                      <Sparkles />
+                      {generating ? "Generating…" : "Generate Feedback"}
+                    </Button>
+                    {aiError && (
+                      <span className="text-xs font-medium text-destructive">{aiError}</span>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="feedback">Evaluation Feedback</Label>
+                  <Textarea
+                    id="feedback"
+                    className="mt-1.5 min-h-[15.5rem]"
+                    value={meta.feedback}
+                    disabled={!editing}
+                    onChange={(e) => update({ feedback: e.target.value })}
+                    placeholder="The generated feedback appears here and stays fully editable…"
+                  />
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    This exact text appears in the report and the exported PDF.
+                  </p>
+                </div>
               </div>
 
               <div className="mt-5 flex flex-wrap gap-2">
