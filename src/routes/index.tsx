@@ -31,6 +31,7 @@ import { ReportSheet, type ReportMeta } from "@/components/ReportSheet";
 import { KPI_DEFINITIONS, MAX_TOTAL, type KpiKey, type Tutor } from "@/lib/kpi";
 import type { SyncSummary } from "@/lib/sheet-import";
 import { formatSyncTime, useTutorStore } from "@/lib/tutor-store";
+import { MENTORS, TEAM_LEADERS, normalizeNames } from "@/lib/people";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -85,8 +86,8 @@ function Index() {
   const [editing, setEditing] = useState(true);
   const [generated, setGenerated] = useState(false);
   const [exporting, setExporting] = useState(false);
-  const [mentors, setMentors] = useState(["Bousy Mohamed", "Rehab Mohamed", "Sawsan Emad"]);
-  const [leaders, setLeaders] = useState(["Ghada Mohamed", "Ahmed Hesham"]);
+  const [mentors, setMentors] = useState<string[]>(MENTORS);
+  const [leaders, setLeaders] = useState<string[]>(TEAM_LEADERS);
   const [meta, setMeta] = useState<ReportMeta>({
     mentor: "",
     teamLeader: "",
