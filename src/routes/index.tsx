@@ -198,7 +198,7 @@ function Index() {
             </div>
             <div className="grid gap-4 p-6 md:grid-cols-2" id="upload">
               <div>
-                <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                <Label className="text-xs font-semibold uppercase tracking-wide text-brand-sky">
                   Sheet source
                 </Label>
                 <div className="mt-2">
@@ -211,9 +211,11 @@ function Index() {
                   />
                 </div>
                 <p className="mt-2 text-xs text-muted-foreground">
-                  Supports .xlsx, .xls and .csv. Columns are detected by name.
+                  Columns are detected automatically by name — you can review the mapping before
+                  syncing.
                 </p>
               </div>
+
               <div id="sync" className="rounded-xl bg-secondary/60 p-4">
                 <p className="flex items-center gap-2 text-sm font-bold text-primary">
                   <RefreshCw className="size-4" /> Sync status
@@ -271,7 +273,7 @@ function Index() {
                     placeholder="Select mentor"
                     disabled={!editing}
                     onChange={(v) => update({ mentor: v })}
-                    onAddOption={(v) => setMentors((m) => [...m, v])}
+                    onAddOption={(v) => setMentors((m) => normalizeNames([...m, v]))}
                   />
                 </div>
                 <div>
@@ -282,7 +284,7 @@ function Index() {
                     placeholder="Select team leader"
                     disabled={!editing}
                     onChange={(v) => update({ teamLeader: v })}
-                    onAddOption={(v) => setLeaders((l) => [...l, v])}
+                    onAddOption={(v) => setLeaders((l) => normalizeNames([...l, v]))}
                   />
                 </div>
                 <div>
