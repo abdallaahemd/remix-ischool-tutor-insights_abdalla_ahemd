@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { tutors as seedTutors, type Tutor } from "@/lib/kpi";
+import { type Tutor } from "@/lib/kpi";
 
 const KEY = "ischool-tutor-data";
 
@@ -9,7 +9,7 @@ type Stored = {
 };
 
 export function useTutorStore() {
-  const [data, setData] = useState<Stored>({ tutors: seedTutors, lastSynced: null });
+  const [data, setData] = useState<Stored>({ tutors: [], lastSynced: null });
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export function useTutorStore() {
   );
 
   const resetToSeed = useCallback(() => {
-    save({ tutors: seedTutors, lastSynced: null });
+    save({ tutors: [], lastSynced: null });
   }, [save]);
 
   return { tutors: data.tutors, lastSynced: data.lastSynced, hydrated, applySync, resetToSeed };
