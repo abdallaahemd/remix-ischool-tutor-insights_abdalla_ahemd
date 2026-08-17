@@ -42,7 +42,7 @@ export const generateFeedback = createServerFn({ method: "POST" })
       .join("\n");
 
     const result = streamText({
-      model: gateway("google/gemini-3-flash"),
+      model: gateway("google/gemini-3.6-flash"),
       system,
       prompt,
     });
