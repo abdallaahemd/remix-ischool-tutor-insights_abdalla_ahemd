@@ -160,21 +160,14 @@ function Index() {
       const pageWidth = 210;
       const pageHeight = 297;
       const margin = 8;
-      const imgWidth = pageWidth - margin * 2;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      const maxWidth = pageWidth - margin * 2;
+      const maxHeight = pageHeight - margin * 2;
+      // Always fit the whole report on a single page (scale down when needed)
+      const ratio = Math.min(maxWidth / canvas.width, maxHeight / canvas.height);
+      const imgWidth = canvas.width * ratio;
+      const imgHeight = canvas.height * ratio;
       const data = canvas.toDataURL("image/png");
-      if (imgHeight <= pageHeight - margin * 2) {
-        pdf.addImage(data, "PNG", margin, margin, imgWidth, imgHeight);
-      } else {
-        let remaining = imgHeight;
-        let offset = 0;
-        while (remaining > 0) {
-          pdf.addImage(data, "PNG", margin, margin - offset, imgWidth, imgHeight);
-          remaining -= pageHeight - margin * 2;
-          offset += pageHeight - margin * 2;
-          if (remaining > 0) pdf.addPage();
-        }
-      }
+      pdf.addImage(data, "PNG", (pageWidth - imgWidth) / 2, margin, imgWidth, imgHeight);
       pdf.save(`iSchool-KPI-${tutor.id}-${meta.month.replace(/\s+/g, "-")}.pdf`);
     } finally {
       setExporting(false);
