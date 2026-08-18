@@ -24,11 +24,11 @@ export function ReportSheet({ tutor, meta }: { tutor: Tutor; meta: ReportMeta })
       id="report-sheet"
       className="mx-auto w-full max-w-[820px] overflow-hidden rounded-2xl bg-card shadow-report"
     >
-      <header className="report-header px-8 py-8 sm:px-10">
-        <div className="flex flex-wrap items-center justify-between gap-6">
-          <div className="flex items-center gap-4">
-            <img src={logoAsset.url} alt="iSchool" className="h-11 w-auto" />
-            <span className="hidden h-10 w-px bg-accent sm:block" />
+      <header className="report-header px-8 py-5 sm:px-9">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <img src={logoAsset.url} alt="iSchool" className="h-10 w-auto" />
+            <span className="hidden h-9 w-px bg-accent sm:block" />
             <div className="hidden sm:block">
               <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-sky">
                 iSchool
@@ -39,21 +39,20 @@ export function ReportSheet({ tutor, meta }: { tutor: Tutor; meta: ReportMeta })
             </div>
           </div>
           <div className="text-right">
-            <p className="text-lg font-bold tracking-tight text-primary sm:text-xl">
+            <p className="text-lg font-bold tracking-tight text-primary">
               Monthly Tutor Evaluation Report
             </p>
-            <p className="mt-0.5 text-sm font-medium text-muted-foreground">
+            <p className="mt-0.5 text-xs font-medium text-muted-foreground">
               KPI &amp; Culture Fit Assessment
             </p>
-            <span className="mt-2 inline-block rounded-full border border-brand-yellow bg-brand-yellow/15 px-3 py-0.5 text-[11px] font-bold uppercase tracking-wide text-brand-orange">
+            <span className="mt-1.5 inline-block rounded-full border border-brand-yellow bg-brand-yellow/15 px-3 py-0.5 text-[11px] font-bold uppercase tracking-wide text-brand-orange">
               {meta.month || "—"}
             </span>
           </div>
         </div>
       </header>
 
-      <div className="header-rule h-1.5 w-full" />
-
+      <div className="header-rule h-1 w-full" />
 
       <section className="grid grid-cols-2 gap-px bg-border sm:grid-cols-4">
         <Field label="Tutor Name" value={tutor.name} />
@@ -62,21 +61,27 @@ export function ReportSheet({ tutor, meta }: { tutor: Tutor; meta: ReportMeta })
         <Field label="Team Leader" value={meta.teamLeader || "—"} />
       </section>
 
-      <div className="border-b border-border bg-secondary/60 px-8 py-3 text-sm font-semibold text-primary sm:px-10">
+      <div className="border-b border-border bg-secondary/60 px-8 py-2 text-xs font-semibold text-primary sm:px-9">
         Evaluation Month: <span className="font-bold">{meta.month || "—"}</span>
       </div>
 
-      <section className="px-8 py-7 sm:px-10">
-        <h3 className="text-base font-bold text-primary">KPI Breakdown</h3>
-        <table className="mt-4 w-full border-collapse text-sm">
+      <section className="px-8 py-5 sm:px-9">
+        <h3 className="text-sm font-bold text-primary">KPI Breakdown</h3>
+        <table className="mt-2.5 w-full table-fixed border-collapse text-sm">
+          <colgroup>
+            <col />
+            <col className="w-[70px]" />
+            <col className="w-[60px]" />
+            <col className="w-[70px]" />
+          </colgroup>
           <thead>
             <tr className="bg-primary text-primary-foreground">
-              <th className="rounded-l-lg px-4 py-3 text-left font-semibold">
+              <th className="rounded-l-lg px-3 py-2 text-left text-xs font-semibold">
                 Key Performance Indicator
               </th>
-              <th className="px-4 py-3 text-center font-semibold">Score</th>
-              <th className="px-4 py-3 text-center font-semibold">Max</th>
-              <th className="rounded-r-lg px-4 py-3 text-center font-semibold">%</th>
+              <th className="px-2 py-2 text-center text-xs font-semibold">Score</th>
+              <th className="px-2 py-2 text-center text-xs font-semibold">Max</th>
+              <th className="rounded-r-lg px-2 py-2 text-center text-xs font-semibold">%</th>
             </tr>
           </thead>
           <tbody>
@@ -84,15 +89,21 @@ export function ReportSheet({ tutor, meta }: { tutor: Tutor; meta: ReportMeta })
               const value = tutor[kpi.key] ?? 0;
               return (
                 <tr key={kpi.key} className="border-b border-border last:border-0">
-                  <td className="px-4 py-3">
-                    <p className="font-semibold text-foreground">{kpi.label}</p>
-                    <p className="text-xs text-muted-foreground">{kpi.description}</p>
+                  <td className="px-3 py-1.5 align-middle">
+                    <p className="text-[13px] font-semibold leading-tight text-foreground">
+                      {kpi.label}
+                    </p>
+                    <p className="text-[11px] leading-tight text-muted-foreground">
+                      {kpi.description}
+                    </p>
                   </td>
-                  <td className="px-4 py-3 text-center text-base font-bold text-primary">
+                  <td className="px-2 py-1.5 text-center align-middle text-sm font-bold text-primary">
                     {value}
                   </td>
-                  <td className="px-4 py-3 text-center text-muted-foreground">{kpi.max}</td>
-                  <td className="px-4 py-3 text-center font-semibold text-brand-orange">
+                  <td className="px-2 py-1.5 text-center align-middle text-xs text-muted-foreground">
+                    {kpi.max}
+                  </td>
+                  <td className="px-2 py-1.5 text-center align-middle text-xs font-semibold text-brand-orange">
                     {Math.round((value / kpi.max) * 100)}%
                   </td>
                 </tr>
@@ -101,43 +112,45 @@ export function ReportSheet({ tutor, meta }: { tutor: Tutor; meta: ReportMeta })
           </tbody>
         </table>
 
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-xl bg-secondary px-6 py-5">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-secondary px-5 py-3">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
               Total Score
             </p>
-            <p className="text-2xl font-bold text-primary">
-              {score} <span className="text-base font-medium text-muted-foreground">/ {MAX_TOTAL}</span>
+            <p className="text-xl font-bold leading-tight text-primary">
+              {score} <span className="text-sm font-medium text-muted-foreground">/ {MAX_TOTAL}</span>
             </p>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
               Percentage
             </p>
-            <p className="text-2xl font-bold text-brand-orange">{percentage.toFixed(1)}%</p>
+            <p className="text-xl font-bold leading-tight text-brand-orange">
+              {percentage.toFixed(1)}%
+            </p>
           </div>
-          <div className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground">
+          <div className="rounded-lg bg-primary px-4 py-1.5 text-xs font-bold text-primary-foreground">
             {ratingLabel(percentage)}
           </div>
         </div>
 
-        <div className="mt-7">
-          <h3 className="text-base font-bold text-primary">Evaluation Feedback</h3>
-          <div className="mt-3 min-h-28 whitespace-pre-wrap rounded-xl border border-border bg-background px-5 py-4 text-sm leading-relaxed text-foreground">
+        <div className="mt-4">
+          <h3 className="text-sm font-bold text-primary">Evaluation Feedback</h3>
+          <div className="mt-2 whitespace-pre-wrap rounded-xl border border-border bg-background px-4 py-3 text-[13px] leading-snug text-foreground">
             {meta.feedback?.trim() || "No feedback provided for this evaluation period."}
           </div>
         </div>
 
-        <div className="mt-8 flex flex-wrap items-end justify-between gap-6 border-t border-border pt-5 text-xs text-muted-foreground">
+        <div className="mt-5 grid grid-cols-3 items-end gap-6 border-t border-border pt-4 text-[11px] text-muted-foreground">
           <div>
-            <p className="mb-6">Mentor Signature</p>
-            <p className="w-48 border-t border-border pt-1">{meta.mentor || " "}</p>
+            <p className="mb-5">Mentor Signature</p>
+            <p className="border-t border-border pt-1">{meta.mentor || " "}</p>
           </div>
           <div>
-            <p className="mb-6">Team Leader Signature</p>
-            <p className="w-48 border-t border-border pt-1">{meta.teamLeader || " "}</p>
+            <p className="mb-5">Team Leader Signature</p>
+            <p className="border-t border-border pt-1">{meta.teamLeader || " "}</p>
           </div>
-          <p className="ml-auto">iSchool · Official Evaluation Document</p>
+          <p className="text-right">iSchool · Official Evaluation Document</p>
         </div>
       </section>
     </div>
