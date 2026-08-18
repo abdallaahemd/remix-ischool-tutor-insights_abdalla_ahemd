@@ -159,7 +159,7 @@ export function ReportSheet({ tutor, meta }: { tutor: Tutor; meta: ReportMeta })
 
 function Field({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-card px-6 py-4">
+    <div className="bg-card px-5 py-2.5">
       <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
         {label}
       </p>
