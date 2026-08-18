@@ -26,7 +26,7 @@ export const generateFeedback = createServerFn({ method: "POST" })
       "- Never invent facts, numbers, incidents or achievements that are not in the notes.",
       "- Ground everything strictly in the provided notes and the selected feedback type.",
       "- Where the notes support it, briefly cover strengths, areas needing improvement, and one concrete recommendation.",
-      "- Be concise and balanced: 90-130 words maximum, at most 2 short paragraphs (or 1 short paragraph plus up to 3 brief bullets).",
+      "- Be very concise and balanced: 55-80 words maximum, at most 2 very short paragraphs (or 1 short paragraph plus up to 2 brief bullets). Never exceed 80 words.",
       "- No filler, no repetition, no headings, no salutation, no signature. The result must fit neatly on a single-page PDF report.",
       "- Neutral, respectful, corporate tone in English. Output plain text only.",
     ].join("\n");
