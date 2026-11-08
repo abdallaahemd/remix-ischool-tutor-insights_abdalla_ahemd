@@ -9,6 +9,7 @@ export type Tutor = {
   professionalism: number | null;
   attendance: number | null;
   recordedTotal: number | null;
+  qualityByMonth?: Record<string, number | null>;
 };
 
 export const tutors = tutorsData as Tutor[];
@@ -51,14 +52,65 @@ export const KPI_DEFINITIONS: { key: KpiKey; label: string; description: string;
   },
 ];
 
-export const MAX_TOTAL = KPI_DEFINITIONS.reduce((sum, k) => sum + k.max, 0);
+export const KPI_WEIGHT = 40;
+export const QUALITY_WEIGHT = 60;
+export const QUALITY_MAX = 100;
+export const FINAL_SCORE_MAX = KPI_WEIGHT + QUALITY_WEIGHT;
+export const MAX_TOTAL = KPI_WEIGHT;
+
+export function getQualityValue(tutor: Tutor, month?: string) {
+  const monthlyValues = tutor.qualityByMonth;
+  if (monthlyValues && Object.keys(monthlyValues).length > 0) {
+    return month ? (monthlyValues[month] ?? null) : null;
+  }
+  return tutor.recordedTotal;
+}
+
+export function isValidScore(value: number | null | undefined, max: number) {
+  return typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= max;
+}
+
+export function isValidQualityScore(value: number | null | undefined) {
+  return isValidScore(value, QUALITY_MAX);
+}
+
+export function formatScore(value: number) {
+  const rounded = roundToTwo(value);
+  return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(2);
+}
+
+function roundToTwo(value: number) {
+  return Math.round((value + Number.EPSILON) * 100) / 100;
+}
+
+export function kpiScore(tutor: Tutor) {
+  return roundToTwo(KPI_DEFINITIONS.reduce((sum, k) => sum + (tutor[k.key] ?? 0), 0));
+}
+
+export function qualityPoints(quality: number | null | undefined) {
+  if (!isValidQualityScore(quality)) return null;
+  return roundToTwo((quality / QUALITY_MAX) * QUALITY_WEIGHT);
+}
+
+export function scoreBreakdown(tutor: Tutor, month?: string) {
+  const quality = getQualityValue(tutor, month);
+  const qualityScore = qualityPoints(quality);
+  const total = qualityScore === null ? null : roundToTwo(kpiScore(tutor) + qualityScore);
+  return {
+    kpiScore: kpiScore(tutor),
+    quality,
+    qualityScore,
+    total,
+    percentage: total === null ? null : (total / FINAL_SCORE_MAX) * 100,
+  };
+}
 
 export function totalScore(tutor: Tutor) {
-  return KPI_DEFINITIONS.reduce((sum, k) => sum + (tutor[k.key] ?? 0), 0);
+  return scoreBreakdown(tutor).total ?? kpiScore(tutor);
 }
 
 export function totalPercentage(tutor: Tutor) {
-  return (totalScore(tutor) / MAX_TOTAL) * 100;
+  return (totalScore(tutor) / FINAL_SCORE_MAX) * 100;
 }
 
 export function ratingLabel(percentage: number) {

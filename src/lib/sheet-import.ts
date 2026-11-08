@@ -8,7 +8,8 @@ export type FieldKey =
   | "growth"
   | "professionalism"
   | "attendance"
-  | "recordedTotal";
+  | "recordedTotal"
+  | "evaluationMonth";
 
 export const FIELD_LABELS: Record<FieldKey, string> = {
   id: "Tutor ID",
@@ -18,7 +19,8 @@ export const FIELD_LABELS: Record<FieldKey, string> = {
   growth: "Growth Mindset",
   professionalism: "Professionalism",
   attendance: "Dependability / Attendance",
-  recordedTotal: "Total Score (sheet)",
+  recordedTotal: "Quality Score (sheet, max 100)",
+  evaluationMonth: "Evaluation Month (sheet)",
 };
 
 export const REQUIRED_FIELDS: FieldKey[] = ["id", "name"];
@@ -31,7 +33,8 @@ const ALIASES: Record<FieldKey, string[]> = {
   growth: ["growthmindset", "growth", "mindset"],
   professionalism: ["professionalism", "professional", "attitude"],
   attendance: ["dependabilityattendance", "attendance", "dependability", "punctuality"],
-  recordedTotal: ["totalscore", "total", "score", "overall", "finalscore"],
+  recordedTotal: ["qualityscore", "quality", "totalscore", "total", "score", "overall", "finalscore"],
+  evaluationMonth: ["evaluationmonth", "month", "evaluationperiod", "period"],
 };
 
 const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -74,9 +77,33 @@ export async function analyzeSheet(file: File): Promise<SheetAnalysis> {
 
 const num = (v: unknown): number | null => {
   if (v === null || v === undefined || v === "") return null;
-  const n = Number(String(v).replace(/[^0-9.\-]/g, ""));
+  const cleaned = String(v).replace(/[^0-9.\-]/g, "");
+  if (!cleaned) return null;
+  const n = Number(cleaned);
   return Number.isFinite(n) ? n : null;
 };
+
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+
+export function normalizeEvaluationMonth(value: unknown) {
+  if (typeof value === "number" && Number.isFinite(value) && value > 0) {
+    const date = new Date(Date.UTC(1899, 11, 30) + value * 86_400_000);
+    return MONTHS[date.getUTCMonth()] ?? null;
+  }
+  const text = String(value ?? "").trim();
+  if (!text) return null;
+  const namedMonth = MONTHS.find((month) =>
+    new RegExp(`\\b${month.slice(0, 3)}(?:${month.slice(3)})?\\b`, "i").test(text),
+  );
+  if (namedMonth) return namedMonth;
+  const yearFirst = text.match(/^\d{4}[-/]([0-1]?\d)(?:[-/]\d{1,2})?$/);
+  const monthFirst = text.match(/^([0-1]?\d)[-/]\d{4}$/);
+  const numericMonth = Number(yearFirst?.[1] ?? monthFirst?.[1]);
+  return numericMonth >= 1 && numericMonth <= 12 ? MONTHS[numericMonth - 1] ?? null : null;
+}
 
 export type SyncSummary = {
   detected: number;
@@ -90,19 +117,26 @@ export function buildTutorsFromSheet(
   analysis: SheetAnalysis,
   mapping: Partial<Record<FieldKey, string>>,
 ): { tutors: Tutor[]; errors: number } {
-  const tutors: Tutor[] = [];
+  const tutorsById = new Map<string, Tutor>();
   let errors = 0;
   const seen = new Set<string>();
+  const monthlyQuality = Boolean(mapping.evaluationMonth && mapping.recordedTotal);
 
   for (const row of analysis.rows) {
     const id = mapping.id ? String(row[mapping.id] ?? "").trim() : "";
     const name = mapping.name ? String(row[mapping.name] ?? "").trim() : "";
-    if (!id || !name || seen.has(id)) {
+    const month = monthlyQuality
+      ? normalizeEvaluationMonth(row[mapping.evaluationMonth ?? ""])
+      : null;
+    const rowKey = monthlyQuality ? `${id}\u0000${month ?? "__invalid_month__"}` : id;
+    if (!id || !name || seen.has(rowKey) || (monthlyQuality && !month)) {
       if (Object.values(row).some((v) => v !== null && v !== "")) errors += 1;
       continue;
     }
-    seen.add(id);
-    tutors.push({
+    seen.add(rowKey);
+    const existing = tutorsById.get(id);
+    const quality = mapping.recordedTotal ? num(row[mapping.recordedTotal]) : null;
+    const tutor: Tutor = existing ?? {
       id,
       name,
       innovation: mapping.innovation ? num(row[mapping.innovation]) : null,
@@ -110,10 +144,16 @@ export function buildTutorsFromSheet(
       growth: mapping.growth ? num(row[mapping.growth]) : null,
       professionalism: mapping.professionalism ? num(row[mapping.professionalism]) : null,
       attendance: mapping.attendance ? num(row[mapping.attendance]) : null,
-      recordedTotal: mapping.recordedTotal ? num(row[mapping.recordedTotal]) : null,
-    });
+      recordedTotal: monthlyQuality ? null : quality,
+    };
+    if (monthlyQuality && month) {
+      tutor.qualityByMonth = { ...tutor.qualityByMonth, [month]: quality };
+    } else if (mapping.recordedTotal) {
+      tutor.recordedTotal = quality;
+    }
+    tutorsById.set(id, tutor);
   }
-  return { tutors, errors };
+  return { tutors: Array.from(tutorsById.values()), errors };
 }
 
 export function mergeTutors(current: Tutor[], incoming: Tutor[]) {
@@ -125,7 +165,10 @@ export function mergeTutors(current: Tutor[], incoming: Tutor[]) {
   for (const tutor of incoming) {
     const existing = byId.get(tutor.id);
     if (!existing) {
-      byId.set(tutor.id, tutor);
+      const mergedTutor = tutor.qualityByMonth
+        ? { ...tutor, qualityByMonth: { ...existing.qualityByMonth, ...tutor.qualityByMonth } }
+        : tutor;
+      byId.set(tutor.id, mergedTutor);
       added += 1;
     } else if (JSON.stringify(existing) !== JSON.stringify(tutor)) {
       byId.set(tutor.id, tutor);
