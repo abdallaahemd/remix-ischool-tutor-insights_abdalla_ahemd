@@ -1,4 +1,4 @@
-import type { Tutor } from "@/lib/kpi";
+import { isValidScore, KPI_DEFINITIONS, type KpiKey, type Tutor } from "@/lib/kpi";
 
 export type FieldKey =
   | "id"
@@ -83,6 +83,18 @@ const num = (v: unknown): number | null => {
   return Number.isFinite(n) ? n : null;
 };
 
+function importedKpiValue(
+  row: Record<string, unknown>,
+  mapping: Partial<Record<FieldKey, string>>,
+  key: KpiKey,
+) {
+  const column = mapping[key];
+  if (!column) return null;
+  const value = num(row[column]);
+  const definition = KPI_DEFINITIONS.find((kpi) => kpi.key === key);
+  return value !== null && definition && isValidScore(value, definition.max) ? value : null;
+}
+
 const MONTHS = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December",
@@ -136,20 +148,27 @@ export function buildTutorsFromSheet(
     seen.add(rowKey);
     const existing = tutorsById.get(id);
     const quality = mapping.recordedTotal ? num(row[mapping.recordedTotal]) : null;
+    const validQuality = quality === null || isValidScore(quality, 100);
+    if (!validQuality) errors += 1;
     const tutor: Tutor = existing ?? {
       id,
       name,
-      innovation: mapping.innovation ? num(row[mapping.innovation]) : null,
-      adaptability: mapping.adaptability ? num(row[mapping.adaptability]) : null,
-      growth: mapping.growth ? num(row[mapping.growth]) : null,
-      professionalism: mapping.professionalism ? num(row[mapping.professionalism]) : null,
-      attendance: mapping.attendance ? num(row[mapping.attendance]) : null,
-      recordedTotal: monthlyQuality ? null : quality,
+      innovation: importedKpiValue(row, mapping, "innovation"),
+      adaptability: importedKpiValue(row, mapping, "adaptability"),
+      growth: importedKpiValue(row, mapping, "growth"),
+      professionalism: importedKpiValue(row, mapping, "professionalism"),
+      attendance: importedKpiValue(row, mapping, "attendance"),
+      recordedTotal: monthlyQuality ? null : validQuality ? quality : null,
     };
     if (monthlyQuality && month) {
-      tutor.qualityByMonth = { ...tutor.qualityByMonth, [month]: quality };
+      tutor.qualityByMonth = { ...tutor.qualityByMonth, [month]: validQuality ? quality : null };
     } else if (mapping.recordedTotal) {
-      tutor.recordedTotal = quality;
+      tutor.recordedTotal = validQuality ? quality : null;
+    }
+    for (const kpi of KPI_DEFINITIONS) {
+      const column = mapping[kpi.key];
+      const imported = importedKpiValue(row, mapping, kpi.key);
+      if (column && imported === null && num(row[column]) !== null) errors += 1;
     }
     tutorsById.set(id, tutor);
   }
@@ -165,13 +184,13 @@ export function mergeTutors(current: Tutor[], incoming: Tutor[]) {
   for (const tutor of incoming) {
     const existing = byId.get(tutor.id);
     if (!existing) {
-      const mergedTutor = tutor.qualityByMonth
-        ? { ...tutor, qualityByMonth: { ...existing.qualityByMonth, ...tutor.qualityByMonth } }
-        : tutor;
-      byId.set(tutor.id, mergedTutor);
+      byId.set(tutor.id, tutor);
       added += 1;
     } else if (JSON.stringify(existing) !== JSON.stringify(tutor)) {
-      byId.set(tutor.id, tutor);
+      const mergedTutor = tutor.qualityByMonth
+        ? { ...tutor, qualityByMonth: { ...existing.qualityByMonth, ...tutor.qualityByMonth } }
+        : { ...tutor, qualityByMonth: existing.qualityByMonth };
+      byId.set(tutor.id, mergedTutor);
       updated += 1;
     } else {
       unchanged += 1;

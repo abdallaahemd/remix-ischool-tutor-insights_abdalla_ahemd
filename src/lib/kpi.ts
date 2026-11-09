@@ -88,7 +88,7 @@ export function kpiScore(tutor: Tutor) {
 }
 
 export function qualityPoints(quality: number | null | undefined) {
-  if (!isValidQualityScore(quality)) return null;
+  if (quality === null || quality === undefined || !isValidQualityScore(quality)) return null;
   return roundToTwo((quality / QUALITY_MAX) * QUALITY_WEIGHT);
 }
 
@@ -105,12 +105,13 @@ export function scoreBreakdown(tutor: Tutor, month?: string) {
   };
 }
 
-export function totalScore(tutor: Tutor) {
-  return scoreBreakdown(tutor).total ?? kpiScore(tutor);
+export function totalScore(tutor: Tutor, month?: string) {
+  return scoreBreakdown(tutor, month).total;
 }
 
-export function totalPercentage(tutor: Tutor) {
-  return (totalScore(tutor) / FINAL_SCORE_MAX) * 100;
+export function totalPercentage(tutor: Tutor, month?: string) {
+  const total = totalScore(tutor, month);
+  return total === null ? null : roundToTwo((total / FINAL_SCORE_MAX) * 100);
 }
 
 export function ratingLabel(percentage: number) {

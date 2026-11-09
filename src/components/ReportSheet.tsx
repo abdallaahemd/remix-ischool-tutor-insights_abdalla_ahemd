@@ -1,10 +1,14 @@
 import logoAsset from "@/assets/ischool-logo.png.asset.json";
 import {
+  FINAL_SCORE_MAX,
   KPI_DEFINITIONS,
+  KPI_WEIGHT,
   MAX_TOTAL,
+  QUALITY_MAX,
+  QUALITY_WEIGHT,
+  formatScore,
   ratingLabel,
-  totalPercentage,
-  totalScore,
+  scoreBreakdown,
   type Tutor,
 } from "@/lib/kpi";
 
@@ -16,8 +20,9 @@ export type ReportMeta = {
 };
 
 export function ReportSheet({ tutor, meta }: { tutor: Tutor; meta: ReportMeta }) {
-  const score = totalScore(tutor);
-  const percentage = totalPercentage(tutor);
+  const breakdown = scoreBreakdown(tutor, meta.month);
+  const score = breakdown.total ?? 0;
+  const percentage = breakdown.percentage ?? 0;
 
   return (
     <div
@@ -109,25 +114,53 @@ export function ReportSheet({ tutor, meta }: { tutor: Tutor; meta: ReportMeta })
                 </tr>
               );
             })}
+            <tr className="border-b border-border bg-secondary/40">
+              <td className="px-3 py-1.5 align-middle">
+                <p className="text-[13px] font-semibold leading-tight text-foreground">
+                  Quality Score (from sheet)
+                </p>
+                <p className="text-[11px] leading-tight text-muted-foreground">
+                  Monthly quality rating
+                </p>
+              </td>
+              <td className="px-2 py-1.5 text-center align-middle text-sm font-bold text-primary">
+                {breakdown.quality ?? "—"}
+              </td>
+              <td className="px-2 py-1.5 text-center align-middle text-xs text-muted-foreground">
+                {QUALITY_MAX}
+              </td>
+              <td className="px-2 py-1.5 text-center align-middle text-xs font-semibold text-brand-orange">
+                {breakdown.quality === null
+                  ? "—"
+                  : `${Math.round((breakdown.quality / QUALITY_MAX) * 100)}%`}
+              </td>
+            </tr>
           </tbody>
         </table>
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-secondary px-5 py-3">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-              Total Score
-            </p>
-            <p className="text-xl font-bold leading-tight text-primary">
-              {score} <span className="text-sm font-medium text-muted-foreground">/ {MAX_TOTAL}</span>
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">KPI Score</p>
+            <p className="text-lg font-bold leading-tight text-primary">
+              {formatScore(breakdown.kpiScore)} <span className="text-sm font-medium text-muted-foreground">/ {KPI_WEIGHT}</span>
             </p>
           </div>
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-              Percentage
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Quality Points</p>
+            <p className="text-lg font-bold leading-tight text-primary">
+              {breakdown.qualityScore === null ? "—" : formatScore(breakdown.qualityScore)} <span className="text-sm font-medium text-muted-foreground">/ {QUALITY_WEIGHT}</span>
             </p>
-            <p className="text-xl font-bold leading-tight text-brand-orange">
-              {percentage.toFixed(1)}%
+            <p className="text-[10px] text-muted-foreground">from {breakdown.quality ?? "—"} / {QUALITY_MAX}</p>
+          </div>
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Total Score</p>
+            <p className="text-xl font-bold leading-tight text-primary">
+              {formatScore(score)} <span className="text-sm font-medium text-muted-foreground">/ {FINAL_SCORE_MAX}</span>
             </p>
+          </div>
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Percentage</p>
+            <p className="text-xl font-bold leading-tight text-brand-orange">{percentage.toFixed(1)}%</p>
           </div>
           <div className="rounded-lg bg-primary px-4 py-1.5 text-xs font-bold text-primary-foreground">
             {ratingLabel(percentage)}
