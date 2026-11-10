@@ -29,7 +29,18 @@ import { TutorSearch } from "@/components/TutorSearch";
 import { PersonSelect } from "@/components/PersonSelect";
 import { SheetUploadDialog } from "@/components/SheetUploadDialog";
 import { ReportSheet, type ReportMeta } from "@/components/ReportSheet";
-import { KPI_DEFINITIONS, MAX_TOTAL, type KpiKey, type Tutor } from "@/lib/kpi";
+import {
+  FINAL_SCORE_MAX,
+  KPI_DEFINITIONS,
+  KPI_WEIGHT,
+  QUALITY_WEIGHT,
+  formatScore,
+  hasValidKpiScores,
+  isValidScore,
+  scoreBreakdown,
+  type KpiKey,
+  type Tutor,
+} from "@/lib/kpi";
 import type { SyncSummary } from "@/lib/sheet-import";
 import { formatSyncTime, useTutorStore } from "@/lib/tutor-store";
 import { MENTORS, TEAM_LEADERS, normalizeNames } from "@/lib/people";
@@ -50,6 +61,8 @@ export const Route = createFileRoute("/")({
         content:
           "Sync tutor KPI sheets and generate professional monthly iSchool evaluation reports with PDF export.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Index,
@@ -122,6 +135,11 @@ function Index() {
     [baseTutor, overrides],
   );
 
+  const breakdown = tutor ? scoreBreakdown(tutor, meta.month) : null;
+  const kpisValid = tutor ? hasValidKpiScores(tutor) : false;
+  const qualityValid = breakdown?.qualityScore !== null && breakdown?.qualityScore !== undefined;
+  const canGenerateReport = Boolean(tutor && kpisValid && qualityValid);
+
   const update = (patch: Partial<ReportMeta>) => setMeta((m) => ({ ...m, ...patch }));
 
   const handleGenerateFeedback = async () => {
@@ -146,7 +164,7 @@ function Index() {
   };
 
   const handleExport = async () => {
-    if (!tutor) return;
+    if (!tutor || !canGenerateReport) return;
     setExporting(true);
     try {
       const node = document.getElementById("report-sheet");
@@ -329,7 +347,10 @@ function Index() {
                   <Select
                     value={meta.month}
                     disabled={!editing}
-                    onValueChange={(v) => update({ month: v })}
+                    onValueChange={(v) => {
+                      update({ month: v });
+                      setGenerated(false);
+                    }}
                   >
                     <SelectTrigger className="mt-1.5 w-full">
                       <SelectValue placeholder="Select month" />
@@ -349,38 +370,68 @@ function Index() {
                 <div className="flex items-center justify-between">
                   <Label className="text-sm font-semibold text-primary">KPI scores</Label>
                   <span className="text-xs text-muted-foreground">
-                    Total {KPI_DEFINITIONS.reduce((s, k) => s + (tutor[k.key] ?? 0), 0)} /{" "}
-                    {MAX_TOTAL}
+                    KPI {breakdown ? formatScore(breakdown.kpiScore) : "—"} / {KPI_WEIGHT} + Quality{" "}
+                    {breakdown?.qualityScore === null || breakdown?.qualityScore === undefined
+                      ? "—"
+                      : formatScore(breakdown.qualityScore)} / {QUALITY_WEIGHT} = Total{" "}
+                    {breakdown?.total === null || breakdown?.total === undefined
+                      ? "—"
+                      : formatScore(breakdown.total)} / {FINAL_SCORE_MAX}
                   </span>
                 </div>
+                <div className="mt-3 max-w-sm">
+                  <Label htmlFor="quality-score">Quality Score (from sheet)</Label>
+                  <Input
+                    id="quality-score"
+                    type="number"
+                    value={breakdown?.quality ?? ""}
+                    readOnly
+                    aria-invalid={!qualityValid}
+                    className="mt-1.5"
+                  />
+                  {!qualityValid && (
+                    <p role="alert" className="mt-1.5 text-xs font-medium text-destructive">
+                      {breakdown?.quality === null || breakdown?.quality === undefined
+                        ? `No Quality score is available for ${meta.month}. Upload a sheet with a Quality score between 0 and 100.`
+                        : "The sheet Quality score must be a number from 0 to 100."}
+                    </p>
+                  )}
+                </div>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  {KPI_DEFINITIONS.map((kpi) => (
-                    <div key={kpi.key} className="rounded-xl border border-border p-3">
-                      <p className="text-xs font-semibold text-foreground">{kpi.label}</p>
-                      <div className="mt-2 flex items-center gap-2">
-                        <Input
-                          type="number"
-                          min={0}
-                          max={kpi.max}
-                          step={0.5}
-                          disabled={!editing}
-                          value={tutor[kpi.key] ?? 0}
-                          onChange={(e) =>
-                            setOverrides((o) => ({
-                              ...o,
-                              [kpi.key]: Math.min(
-                                kpi.max,
-                                Math.max(0, Number(e.target.value) || 0),
-                              ),
-                            }))
-                          }
-                        />
-                        <span className="text-xs font-semibold text-muted-foreground">
-                          / {kpi.max}
-                        </span>
+                  {KPI_DEFINITIONS.map((kpi) => {
+                    const score = tutor[kpi.key] ?? 0;
+                    const valid = isValidScore(score, kpi.max);
+                    return (
+                      <div key={kpi.key} className="rounded-xl border border-border p-3">
+                        <p className="text-xs font-semibold text-foreground">{kpi.label}</p>
+                        <div className="mt-2 flex items-center gap-2">
+                          <Input
+                            type="number"
+                            min={0}
+                            max={kpi.max}
+                            step={0.5}
+                            disabled={!editing}
+                            value={score}
+                            aria-invalid={!valid}
+                            onChange={(e) =>
+                              setOverrides((o) => ({
+                                ...o,
+                                [kpi.key]: Number(e.target.value) || 0,
+                              }))
+                            }
+                          />
+                          <span className="text-xs font-semibold text-muted-foreground">
+                            / {kpi.max}
+                          </span>
+                        </div>
+                        {!valid && (
+                          <p role="alert" className="mt-1.5 text-xs font-medium text-destructive">
+                            Enter a score from 0 to {kpi.max}.
+                          </p>
+                        )}
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
@@ -449,7 +500,9 @@ function Index() {
 
               <div className="mt-5 flex flex-wrap gap-2">
                 <Button
+                  disabled={!canGenerateReport}
                   onClick={() => {
+                    if (!canGenerateReport) return;
                     setGenerated(true);
                     setEditing(false);
                     document.getElementById("report")?.scrollIntoView({ behavior: "smooth" });
@@ -474,7 +527,7 @@ function Index() {
           )}
 
           <section id="report">
-            {tutor && generated ? (
+            {tutor && generated && canGenerateReport ? (
               <ReportSheet tutor={tutor} meta={meta} />
             ) : (
               <div className="rounded-2xl border border-dashed border-accent bg-card/60 px-6 py-16 text-center">

@@ -87,6 +87,10 @@ export function kpiScore(tutor: Tutor) {
   return roundToTwo(KPI_DEFINITIONS.reduce((sum, k) => sum + (tutor[k.key] ?? 0), 0));
 }
 
+export function hasValidKpiScores(tutor: Tutor) {
+  return KPI_DEFINITIONS.every((kpi) => isValidScore(tutor[kpi.key] ?? 0, kpi.max));
+}
+
 export function qualityPoints(quality: number | null | undefined) {
   if (quality === null || quality === undefined || !isValidQualityScore(quality)) return null;
   return roundToTwo((quality / QUALITY_MAX) * QUALITY_WEIGHT);
@@ -101,7 +105,7 @@ export function scoreBreakdown(tutor: Tutor, month?: string) {
     quality,
     qualityScore,
     total,
-    percentage: total === null ? null : (total / FINAL_SCORE_MAX) * 100,
+    percentage: total === null ? null : roundToTwo((total / FINAL_SCORE_MAX) * 100),
   };
 }
 

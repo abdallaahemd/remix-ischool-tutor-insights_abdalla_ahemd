@@ -1,4 +1,10 @@
-import { isValidScore, KPI_DEFINITIONS, type KpiKey, type Tutor } from "@/lib/kpi";
+import {
+  isValidScore,
+  KPI_DEFINITIONS,
+  QUALITY_MAX,
+  type KpiKey,
+  type Tutor,
+} from "@/lib/kpi";
 
 export type FieldKey =
   | "id"
@@ -83,6 +89,9 @@ const num = (v: unknown): number | null => {
   return Number.isFinite(n) ? n : null;
 };
 
+const hasSheetValue = (value: unknown) =>
+  value !== null && value !== undefined && String(value).trim() !== "";
+
 function importedKpiValue(
   row: Record<string, unknown>,
   mapping: Partial<Record<FieldKey, string>>,
@@ -147,8 +156,10 @@ export function buildTutorsFromSheet(
     }
     seen.add(rowKey);
     const existing = tutorsById.get(id);
-    const quality = mapping.recordedTotal ? num(row[mapping.recordedTotal]) : null;
-    const validQuality = quality === null || isValidScore(quality, 100);
+    const rawQuality = mapping.recordedTotal ? row[mapping.recordedTotal] : null;
+    const quality = num(rawQuality);
+    const validQuality = quality === null || isValidScore(quality, QUALITY_MAX);
+    if (mapping.recordedTotal && hasSheetValue(rawQuality) && quality === null) errors += 1;
     if (!validQuality) errors += 1;
     const tutor: Tutor = existing ?? {
       id,
@@ -159,6 +170,7 @@ export function buildTutorsFromSheet(
       professionalism: importedKpiValue(row, mapping, "professionalism"),
       attendance: importedKpiValue(row, mapping, "attendance"),
       recordedTotal: monthlyQuality ? null : validQuality ? quality : null,
+      ...(existing?.qualityByMonth ? { qualityByMonth: existing.qualityByMonth } : {}),
     };
     if (monthlyQuality && month) {
       tutor.qualityByMonth = { ...tutor.qualityByMonth, [month]: validQuality ? quality : null };
@@ -168,7 +180,7 @@ export function buildTutorsFromSheet(
     for (const kpi of KPI_DEFINITIONS) {
       const column = mapping[kpi.key];
       const imported = importedKpiValue(row, mapping, kpi.key);
-      if (column && imported === null && num(row[column]) !== null) errors += 1;
+      if (column && imported === null && hasSheetValue(row[column])) errors += 1;
     }
     tutorsById.set(id, tutor);
   }
