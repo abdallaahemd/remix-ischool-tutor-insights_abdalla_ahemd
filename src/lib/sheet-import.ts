@@ -155,7 +155,7 @@ export function buildTutorsFromSheet(
       continue;
     }
     seen.add(rowKey);
-    const existing = tutorsById.get(id);
+    const existing = tutorsById.get(id) as Tutor | undefined;
     const rawQuality = mapping.recordedTotal ? row[mapping.recordedTotal] : null;
     const quality = num(rawQuality);
     const validQuality = quality === null || isValidScore(quality, QUALITY_MAX);
@@ -170,10 +170,13 @@ export function buildTutorsFromSheet(
       professionalism: importedKpiValue(row, mapping, "professionalism"),
       attendance: importedKpiValue(row, mapping, "attendance"),
       recordedTotal: monthlyQuality ? null : validQuality ? quality : null,
-      ...(existing?.qualityByMonth ? { qualityByMonth: existing.qualityByMonth } : {}),
     };
+    if (existing?.qualityByMonth) tutor.qualityByMonth = existing.qualityByMonth;
     if (monthlyQuality && month) {
-      tutor.qualityByMonth = { ...tutor.qualityByMonth, [month]: validQuality ? quality : null };
+      tutor.qualityByMonth = {
+        ...(tutor.qualityByMonth ?? {}),
+        [month]: validQuality ? quality : null,
+      };
     } else if (mapping.recordedTotal) {
       tutor.recordedTotal = validQuality ? quality : null;
     }
@@ -199,9 +202,12 @@ export function mergeTutors(current: Tutor[], incoming: Tutor[]) {
       byId.set(tutor.id, tutor);
       added += 1;
     } else if (JSON.stringify(existing) !== JSON.stringify(tutor)) {
-      const mergedTutor = tutor.qualityByMonth
-        ? { ...tutor, qualityByMonth: { ...existing.qualityByMonth, ...tutor.qualityByMonth } }
-        : { ...tutor, qualityByMonth: existing.qualityByMonth };
+      const qualityByMonth = { ...existing.qualityByMonth, ...tutor.qualityByMonth };
+      const mergedTutor: Tutor = {
+        ...existing,
+        ...tutor,
+        ...(Object.keys(qualityByMonth).length > 0 ? { qualityByMonth } : {}),
+      };
       byId.set(tutor.id, mergedTutor);
       updated += 1;
     } else {
