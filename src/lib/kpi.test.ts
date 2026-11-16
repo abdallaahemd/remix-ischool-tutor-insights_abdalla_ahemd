@@ -1,6 +1,12 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { hasValidKpiScores, scoreBreakdown, type Tutor } from "@/lib/kpi";
+import {
+  hasValidKpiScores,
+  isValidQualityScore,
+  scoreBreakdown,
+  type Tutor,
+  withQualityScore,
+} from "@/lib/kpi";
 
 const tutorWith = (kpiTotal: number, quality: number | null): Tutor => ({
   id: "test-tutor",
@@ -46,9 +52,31 @@ describe("weighted tutor score", () => {
     assert.equal(result.percentage, null);
   });
 
+  it("accepts Quality scores from 0 through 100 and rejects values outside that range", () => {
+    assert.equal(isValidQualityScore(0), true);
+    assert.equal(isValidQualityScore(100), true);
+    assert.equal(isValidQualityScore(-1), false);
+    assert.equal(isValidQualityScore(101), false);
+  });
+
   it("uses the Quality value for the selected month", () => {
     const tutor = { ...tutorWith(30, null), qualityByMonth: { January: 75, February: 80 } };
     assert.equal(scoreBreakdown(tutor, "January").total, 75);
     assert.equal(scoreBreakdown(tutor, "March").total, null);
+  });
+
+  it("updates an edited monthly Quality score in the weighted total", () => {
+    const tutor = { ...tutorWith(30, null), qualityByMonth: { January: 75, February: 80 } };
+    const edited = withQualityScore(tutor, "January", 90);
+    assert.equal(scoreBreakdown(edited, "January").total, 84);
+    assert.equal(scoreBreakdown(edited, "February").total, 78);
+  });
+
+  it("updates a non-monthly Quality score without changing KPI values", () => {
+    const tutor = tutorWith(30, 75);
+    const edited = withQualityScore(tutor, "January", 90);
+    assert.equal(edited.recordedTotal, 90);
+    assert.equal(edited.innovation, tutor.innovation);
+    assert.equal(scoreBreakdown(edited, "January").total, 84);
   });
 });

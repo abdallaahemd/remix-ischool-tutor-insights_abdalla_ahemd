@@ -36,8 +36,10 @@ import {
   QUALITY_WEIGHT,
   formatScore,
   hasValidKpiScores,
+  isValidQualityScore,
   isValidScore,
   scoreBreakdown,
+  withQualityScore,
   type KpiKey,
   type Tutor,
 } from "@/lib/kpi";
@@ -109,6 +111,7 @@ function Index() {
 
   const [tutorId, setTutorId] = useState<string | null>(null);
   const [overrides, setOverrides] = useState<Partial<Record<KpiKey, number>>>({});
+  const [qualityDrafts, setQualityDrafts] = useState<Record<string, string>>({});
   const [editing, setEditing] = useState(true);
   const [generated, setGenerated] = useState(false);
   const [exporting, setExporting] = useState(false);
@@ -131,13 +134,23 @@ function Index() {
   );
 
   const tutor: Tutor | null = useMemo(
-    () => (baseTutor ? { ...baseTutor, ...overrides } : null),
-    [baseTutor, overrides],
+    () => {
+      if (!baseTutor) return null;
+      const qualityDraft = qualityDrafts[`${baseTutor.id}:${meta.month}`];
+      if (qualityDraft === undefined) return { ...baseTutor, ...overrides };
+
+      const qualityValue = qualityDraft.trim() === "" ? null : Number(qualityDraft);
+      return { ...withQualityScore(baseTutor, meta.month, qualityValue), ...overrides };
+    },
+    [baseTutor, overrides, qualityDrafts, meta.month],
   );
 
   const breakdown = tutor ? scoreBreakdown(tutor, meta.month) : null;
   const kpisValid = tutor ? hasValidKpiScores(tutor) : false;
-  const qualityValid = breakdown?.qualityScore !== null && breakdown?.qualityScore !== undefined;
+  const qualityValid =
+    breakdown?.quality !== null &&
+    breakdown?.quality !== undefined &&
+    isValidQualityScore(breakdown.quality);
   const canGenerateReport = Boolean(tutor && kpisValid && qualityValid);
 
   const update = (patch: Partial<ReportMeta>) => setMeta((m) => ({ ...m, ...patch }));
@@ -384,8 +397,17 @@ function Index() {
                   <Input
                     id="quality-score"
                     type="number"
-                    value={breakdown?.quality ?? ""}
-                    readOnly
+                    min={0}
+                    max={100}
+                    step="any"
+                    value={qualityDrafts[`${tutor.id}:${meta.month}`] ?? breakdown?.quality ?? ""}
+                    disabled={!editing}
+                    onChange={(e) =>
+                      setQualityDrafts((drafts) => ({
+                        ...drafts,
+                        [`${tutor.id}:${meta.month}`]: e.target.value,
+                      }))
+                    }
                     aria-invalid={!qualityValid}
                     className="mt-1.5"
                   />

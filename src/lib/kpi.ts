@@ -66,6 +66,16 @@ export function getQualityValue(tutor: Tutor, month?: string) {
   return tutor.recordedTotal;
 }
 
+export function withQualityScore(tutor: Tutor, month: string, quality: number | null): Tutor {
+  if (Object.keys(tutor.qualityByMonth ?? {}).length > 0) {
+    return {
+      ...tutor,
+      qualityByMonth: { ...(tutor.qualityByMonth ?? {}), [month]: quality },
+    };
+  }
+  return { ...tutor, recordedTotal: quality };
+}
+
 export function isValidScore(value: number | null | undefined, max: number) {
   return typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= max;
 }
